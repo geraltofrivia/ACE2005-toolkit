@@ -2,7 +2,7 @@ import os
 import json
 import string
 import argparse
-from conllu import parse
+from conllu import parse, parse_with_comments
 from collections import OrderedDict
 from tqdm import tqdm
 from udpipe import Model
@@ -38,11 +38,11 @@ def load_conllu(conllu_file):
     conllu_data = []
     with open(conllu_file, 'r', encoding='utf-8') as content_file:
         content = content_file.read()
-        sentences = parse(content)
+        sentences = parse_with_comments(content)
         for idx, sentence in enumerate(sentences):
             tokens, upos, head, deprel, offset = [], [], [], [], []
             reserved_offsets = []
-            for widx, word in enumerate(sentence):
+            for widx, word in enumerate(sentence['lemmas']):
                 if isinstance(word['id'], tuple):
                     # multi-word token, e.g., word['id'] = (4, '-', 5)
                     assert len(word['id']) == 3
@@ -64,8 +64,8 @@ def load_conllu(conllu_file):
 
             assert len(tokens) == len(offset)
             sent_obj = OrderedDict([
-                ('id', sentence.metadata['sent_id']),
-                ('text', sentence.metadata['text']),
+                ('id', sentence['metadata']['sent_id']),
+                ('text', sentence['metadata']['text']),
                 ('word', tokens),
                 ('upos', upos),
                 ('head', head),
