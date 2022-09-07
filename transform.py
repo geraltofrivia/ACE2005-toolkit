@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import random
 import argparse
+from pathlib import Path
 
 lang_name = {
     'en': 'English',
@@ -120,7 +121,9 @@ def count_type(language='English'):
 
 
 def save_data(data, path):
-    with open(path, 'w', encoding='utf8') as f:
+    path = Path(path)
+    path.parent.mkdir(exist_ok=True)
+    with open(str(path), 'w+', encoding='utf8') as f:
         f.write(json.dumps(data, indent=4, ensure_ascii=False) + '\n')
 
 

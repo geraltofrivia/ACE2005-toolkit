@@ -571,7 +571,8 @@ def modify_files(opt, split):
             json.dump(OrderedDict([
                 ('entities', modified_entities),
                 ('events', modified_events),
-                ('relations', modified_relations)
+                ('relations', modified_relations),
+                ('sentences', sentences)
             ]), fw)
 
     print('[Entities] Total {:>5}, Skipped {:>4}, Dropped {:>4}, Wrong-Head {:>2}.'.format(
